@@ -35,6 +35,10 @@ function ClickHandler () {
 				}
 			);
 	};
+	
+	this.newPoll = function (req, res) {
+		// body...
+	}
 
 }
 

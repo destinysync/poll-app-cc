@@ -59,4 +59,12 @@ module.exports = function(app, passport) {
 		.get(isLoggedIn, clickHandler.getClicks)
 		.post(isLoggedIn, clickHandler.addClick)
 		.delete(isLoggedIn, clickHandler.resetClicks);
+
+	app.route('/newPoll')
+		.get(isLoggedIn, function(req, res) {
+			res.sendFile(path + '/public/newPoll.html');
+		});
+
+	app.route('/addPoll')
+		.post(isLoggedIn, clickHandler.newPoll);
 };
