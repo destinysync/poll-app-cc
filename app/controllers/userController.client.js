@@ -1,37 +1,45 @@
 'use strict';
 
-(function () {
+(function() {
 
-   var profileId = document.querySelector('#profile-id') || null;
-   var profileUsername = document.querySelector('#profile-username') || null;
-   var profileRepos = document.querySelector('#profile-repos') || null;
-   var displayName = document.querySelector('#display-name');
-   var apiUrl = appUrl + '/api/:id';
+   var appUrl = window.location.origin;
+   var allPollContainer = document.querySelector('.allPollContainer');
+   var pollListTitleButton = document.querySelector('.pollListTitle');
+   var allPollApiUrl = appUrl + '/allpoll';
+   var pollContent = document.querySelector('.pollContent');
 
-   function updateHtmlElement (data, element, userProperty) {
-      element.innerHTML = data[userProperty];
-   }
+   // ajax-function
 
-   ajaxFunctions.ready(ajaxFunctions.ajaxRequest('GET', apiUrl, function (data) {
-      var userObject = JSON.parse(data);
+   var ajaxFunctions = {
+      ready: function ready(fn) {
+         if (typeof fn !== 'function') {
+            return;
+         }
 
-      if (userObject.displayName !== null) {
-         updateHtmlElement(userObject, displayName, 'displayName');
-      } else {
-         updateHtmlElement(userObject, displayName, 'username');
+         if (document.readyState === 'complete') {
+            return fn();
+         }
+
+         document.addEventListener('DOMContentLoaded', fn, false);
+      },
+      ajaxRequest: function ajaxRequest(method, url, callback) {
+         var xmlhttp = new XMLHttpRequest();
+
+         xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+               callback(xmlhttp.response);
+            }
+         };
+
+         xmlhttp.open(method, url, true);
+         xmlhttp.send();
       }
+   };
 
-      if (profileId !== null) {
-         updateHtmlElement(userObject, profileId, 'id');   
-      }
-
-      if (profileUsername !== null) {
-         updateHtmlElement(userObject, profileUsername, 'username');   
-      }
-
-      if (profileRepos !== null) {
-         updateHtmlElement(userObject, profileRepos, 'publicRepos');   
-      }
-
+   // ajax-function
+   
+   ajaxFunctions.ready(ajaxFunctions.ajaxRequest('GET', allPollApiUrl, function(data) {
+      allPollContainer.innerHTML = data;
    }));
+
 })();

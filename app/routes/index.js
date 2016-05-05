@@ -66,5 +66,17 @@ module.exports = function(app, passport) {
 		});
 
 	app.route('/addPoll')
-		.post(isLoggedIn, clickHandler.newPoll);
+		.post(isLoggedIn, clickHandler.addPoll);
+
+	app.route('/myPoll')
+		.get(isLoggedIn, clickHandler.myPoll);
+
+	app.route('/allpoll')
+		.get(clickHandler.allPoll);
+
+	app.route('/poll/*')
+		.get(function(req, res) {
+			res.sendFile(path + '/public/pollcontent.html');
+		})
+		.post(clickHandler.pollContent);
 };
