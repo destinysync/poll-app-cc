@@ -133,8 +133,20 @@ function ClickHandler() {
 				if (err) {
 					throw err;
 				}
-				console.log(result.github.pollOptionArr);
-				res.send(result.github.pollTitle + "  >>>  " + JSON.stringify(result.github.pollOptionArr));
+				var pollOptions = '';
+				function fn1(cb) {
+					for (var i = 0; i < result.github.pollOptionArr.length; i++) {
+						pollOptions += "<option value=" + result.github.pollOptionArr[i].pollOption + ">" + result.github.pollOptionArr[i].pollOption + "</option>";
+					}
+					cb();
+				}
+				function fn2() {
+					pollOptions = "<form><select>" + pollOptions + "</select><button type='submit'>Submit</button></form>";
+					console.log(pollOptions);
+					result = "<h3>" + result.github.pollTitle + "</h3>" + "<br>" + pollOptions;
+					res.send(result);
+				}
+				fn1(fn2);
 			});
 	};
 }
