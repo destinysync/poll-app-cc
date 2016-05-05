@@ -78,14 +78,9 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <!--<script type="text/javascript" src="common/ajax-functions.js"></script>-->
-    <!--<script type="text/javascript" src="controllers/pollContent.client.js"></script>-->
-    <!--<script type="text/javascript" src="controllers/userController.client.js"></script>-->
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script>
-        var appUrl = window.location.origin;
         var pollContent = document.querySelector('#pollContent');
         
 
@@ -124,11 +119,6 @@
         ajaxFunctions.ready(ajaxFunctions.ajaxRequest('POST', allPollApiUrl, function(data) {
             pollContent.innerHTML = data;
         }));
-
-        var change = document.querySelector('#change');
-        change.addEventListener('click', function() {
-            pollContent.innerHTML = "dbbbbaa";
-        }, false);
     </script>
 </body>
 

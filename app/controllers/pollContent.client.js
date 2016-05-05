@@ -89,9 +89,5 @@
         pollContent.innerHTML = data;
     }));
     
-    var change = document.querySelector('#change');
-    change.addEventListener('click', function() {
-        pollContent.innerHTML = "dbbbbaa";
-    }, false);
-    
+
     

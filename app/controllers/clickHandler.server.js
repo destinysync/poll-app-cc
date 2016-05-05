@@ -49,7 +49,6 @@ function ClickHandler() {
 				if (err) {
 					throw err;
 				}
-
 				res.json(result.nbrClicks);
 			});
 		res.end();
@@ -62,9 +61,15 @@ function ClickHandler() {
 			pollOptionArr = [];
 
 		function fn1(cb) {
-			for (var i = 0; i < pollOption.length; i++) {
-				if (pollOption[i] !== '\r' && pollOption[i] !== '\n')
-					pollOptionArr.push(pollOption[i]);
+			var pollOptionNew = pollOption.split('\r').join("").split('\n');
+			for (var i = 0; i < pollOptionNew.length; i++) {
+				var item = {};
+				item = {
+					pollOption: pollOptionNew[i],
+					pollOptionVote: 0,
+					pollOptionID: i + 1
+				};
+				pollOptionArr.push(item);
 			}
 			cb();
 		}
@@ -95,7 +100,6 @@ function ClickHandler() {
 				if (err) {
 					throw err;
 				}
-
 				res.json(result);
 			});
 	};
@@ -118,18 +122,19 @@ function ClickHandler() {
 				res.send(body);
 			});
 	};
-	
-	this.pollContent = function (req, res) {
+
+	this.pollContent = function(req, res) {
 		var pollID = req.url.match(/\/poll\/(.*)/)[1];
 		Users
-		.find({
+			.findOne({
 				_id: pollID
 			})
 			.exec(function(err, result) {
 				if (err) {
 					throw err;
 				}
-				res.send(result[0].github.pollTitle);
+				console.log(result.github.pollOptionArr);
+				res.send(result.github.pollTitle + "  >>>  " + JSON.stringify(result.github.pollOptionArr));
 			});
 	};
 }
