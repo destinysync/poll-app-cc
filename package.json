@@ -25,7 +25,9 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "chart.js": "^2.1.0",
     "dotenv": "^1.2.0",
+    "ejs": "^2.4.1",
     "express": "^4.12.4",
     "express-session": "^1.11.3",
     "forever": "^0.15.1",
