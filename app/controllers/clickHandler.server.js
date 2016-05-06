@@ -134,19 +134,69 @@ function ClickHandler() {
 					throw err;
 				}
 				var pollOptions = '';
+
 				function fn1(cb) {
 					for (var i = 0; i < result.github.pollOptionArr.length; i++) {
-						pollOptions += "<option value=" + result.github.pollOptionArr[i].pollOption + ">" + result.github.pollOptionArr[i].pollOption + "</option>";
+						var pollOption = result.github.pollOptionArr[i];
+						pollOptions += "<option value=" + pollOption.pollOptionID + ">" + pollOption.pollOption + "</option>";
 					}
 					cb();
 				}
+
 				function fn2() {
-					pollOptions = "<form><select>" + pollOptions + "</select><button type='submit'>Submit</button></form>";
-					console.log(pollOptions);
+					pollOptions = "<form action=" + "/updateVote/" + result._id + " method='post'" + "><select name='selectpicker'>" + pollOptions + "</select><button type='submit'>Submit</button></form>";
 					result = "<h3>" + result.github.pollTitle + "</h3>" + "<br>" + pollOptions;
 					res.send(result);
 				}
 				fn1(fn2);
+			});
+	};
+
+	this.updateVote = function(req, res) {
+		var pollID = req.url.match(/\/updateVote\/(.*)/)[1];
+		var ID = req.body.selectpicker;
+		var newPollOptionArr = [];
+
+		Users
+			.findOne({
+				'_id': pollID
+			})
+			.exec(function(err, result) {
+				if (err) {
+					throw err;
+				}
+				var arr = result.github.pollOptionArr;
+				newPollOptionArr = arr.map(function(val) {
+					for (var i = 0; i < arr.length; i++) {
+						if (val.pollOptionID == ID) {
+							var obj = {
+								pollOptionID: val.pollOptionID,
+								pollOptionVote: val.pollOptionVote + 1,
+								pollOption: val.pollOption
+							};
+							return obj;
+						}
+						else {
+							return val;
+						}
+					}
+				});
+				Users
+					.findOneAndUpdate({
+						'_id': pollID
+					}, {
+						$set: {
+							'github.pollOptionArr': newPollOptionArr
+						}
+					}, {
+						new: true
+					})
+					.exec(function(err, result) {
+						if (err) {
+							throw err;
+						}
+						res.json(result.github.pollOptionArr);
+					});
 			});
 	};
 }

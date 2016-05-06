@@ -79,4 +79,7 @@ module.exports = function(app, passport) {
 			res.sendFile(path + '/public/pollcontent.html');
 		})
 		.post(clickHandler.pollContent);
+
+	app.route('/updateVote/*')
+		.post(clickHandler.updateVote);
 };
