@@ -1,0 +1,34 @@
+<script>
+        var ctx = document.getElementById("myChart");
+        var data = {
+            labels: <%- pollOptions %>,
+            datasets: [{
+                data: <%= data %> ,
+                backgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ],
+                hoverBackgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ]
+            }]
+        };
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+        });
+
+             var dele = document.querySelector('#dele');
+            var selectpicker = document.querySelector('#selectpicker');
+            var change = document.querySelector('#change');
+            selectpicker.addEventListener('change', function() {
+                if (selectpicker.value == 'del') {
+                    dele.innerHTML = 'change - selectpicker';
+                }
+
+            });
+
+    </script>

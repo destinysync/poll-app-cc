@@ -31,7 +31,7 @@ input {
   height: 500px;
 }
 
-#pollContent {
+.pollContent {
   display: inline-block;
   width: 400px;
 }

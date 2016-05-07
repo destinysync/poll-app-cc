@@ -22,9 +22,6 @@ module.exports = function(app, passport) {
 		});
 
 	app.route('/login')
-		// .get(function (req, res) {
-		// 	res.sendFile(path + '/public/login.html');
-		// });
 		.get(function(req, res) {
 			res.sendFile(path + '/public/login2.html');
 		});
@@ -75,12 +72,7 @@ module.exports = function(app, passport) {
 		.get(clickHandler.allPoll);
 
 	app.route('/poll/*')
-		.get(function(req, res) {
-			// res.sendFile(path + '/public/pollcontent.html');
-			
-			res.render('pollcontent', {pollOptions: JSON.stringify(["Red","Green","Yellow"]), data: '[1, 3, 1]'});
-		})
-		.post(clickHandler.pollContent);
+		.get(clickHandler.pollContent);
 
 	app.route('/updateVote/*')
 		.post(clickHandler.updateVote);

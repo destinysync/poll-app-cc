@@ -26,7 +26,7 @@ app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/common', express.static(process.cwd() + '/app/common'));
 app.use('/css', express.static(process.cwd() + '/public/css'));
-
+app.use('/partials', express.static(process.cwd() + '/public/partials'));
 
 app.use(session({
 	secret: 'secretClementine',

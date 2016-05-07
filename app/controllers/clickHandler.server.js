@@ -136,11 +136,15 @@ function ClickHandler() {
                     throw err;
                 }
                 var pollOptions = '';
+                var data = [];
+                var options = [];
 
                 function fn1(cb) {
                     for (var i = 0; i < result.github.pollOptionArr.length; i++) {
                         var pollOption = result.github.pollOptionArr[i];
                         pollOptions += "<option value=" + pollOption.pollOptionID + ">" + pollOption.pollOption + "</option>";
+                        data.push(pollOption.pollOptionVote);
+                        options.push(pollOption.pollOption);
                     }
                     cb();
                 }
@@ -151,8 +155,13 @@ function ClickHandler() {
 
                     pollOptions = "<form action=" + "/updateVote/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + createPollOption + "</select><br><input type='submit'></form>";
                     result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollOptions;
-                    console.log(result);
-                    res.send(result);
+                    // res.send(result);
+
+                    res.render('pollcontent', {
+                        pollOptions: JSON.stringify(options),
+                        data: JSON.stringify(data),
+                        pollContent: result
+                    });
                 }
                 fn1(fn2);
             });
@@ -203,10 +212,12 @@ function ClickHandler() {
                         }
                         var data = [];
                         var pollOptions = [];
+                        var pollSelect = '';
                         var arr = result.github.pollOptionArr;
 
                         function fn1(cb) {
                             for (var i = 0; i < arr.length; i++) {
+                                pollSelect += "<option value=" + arr[i].pollOptionID + ">" + arr[i].pollOption + "</option>";
                                 data.push(arr[i].pollOptionVote);
                                 pollOptions.push(arr[i].pollOption);
                             }
@@ -214,9 +225,15 @@ function ClickHandler() {
                         }
 
                         function fn2() {
+                            var createPollOption = "<option value=del>Create My Own Option</option>";
+
+                    pollSelect = "<form action=" + "/updateVote/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollSelect + createPollOption + "</select><br><input type='submit'></form>";
+                    result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollSelect;
+                    
                             res.render('updateVote', {
                                 data: JSON.stringify(data),
                                 pollOptions: JSON.stringify(pollOptions),
+                                pollContent: result
                             });
                         }
                         fn1(fn2);
