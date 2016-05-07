@@ -147,10 +147,10 @@ function ClickHandler() {
 
                 function fn2() {
 
-                    var del = "<option value=del>Create My Own Option</option>";
+                    var createPollOption = "<option value=del>Create My Own Option</option>";
 
-                    pollOptions = "<form action=" + "/updateVote/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + del + "</select><br><br><button type='submit'>Submit</button></form>";
-                    result = "<h4>" + result.github.pollTitle + "</h4>" + "<h5>I'd like to vote for ...</h5>" + pollOptions;
+                    pollOptions = "<form action=" + "/updateVote/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + createPollOption + "</select><br><input type='submit'></form>";
+                    result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollOptions;
                     console.log(result);
                     res.send(result);
                 }

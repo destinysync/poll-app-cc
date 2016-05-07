@@ -78,7 +78,7 @@ module.exports = function(app, passport) {
 		.get(function(req, res) {
 			// res.sendFile(path + '/public/pollcontent.html');
 			
-			res.render('pollcontent', {title:"homepage 1", data: '[1, 3, 1]'});
+			res.render('pollcontent', {pollOptions: JSON.stringify(["Red","Green","Yellow"]), data: '[1, 3, 1]'});
 		})
 		.post(clickHandler.pollContent);
 
