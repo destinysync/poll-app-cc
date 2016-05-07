@@ -9,7 +9,8 @@ var User = new Schema({
         displayName: String,
         username: String,
         pollTitle: String,
-        pollOptionArr: Array
+        pollOptionArr: Array,
+        votedIPs: Array
     },
     nbrClicks: {
         clicks: Number
