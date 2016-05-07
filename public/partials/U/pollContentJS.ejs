@@ -21,12 +21,12 @@
             data: data,
         });
 
-             var dele = document.querySelector('#dele');
+            var createInput = document.querySelector('.createInput');
             var selectpicker = document.querySelector('#selectpicker');
             var change = document.querySelector('#change');
             selectpicker.addEventListener('change', function() {
-                if (selectpicker.value == 'del') {
-                    dele.innerHTML = 'change - selectpicker';
+                if (selectpicker.value == 'create') {
+                    createInput.innerHTML = '<h5>Vote with my own option:</h5><input type="text" name="createOption">';
                 }
 
             });

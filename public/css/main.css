@@ -9,9 +9,9 @@ body {
 
 .allPoll {
   background-color: #F8F8F8;
-text-align: center;  
-border-radius: 4px;
-padding: 60px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 60px;
 }
 
 .btn-default {
@@ -26,7 +26,17 @@ select {
   border-radius: 4px;
 }
 
-input {
+input[type=text] {
+  width: 100%;
+  padding: 8px 15px;
+  margin: 0px 0;
+  box-sizing: border-box;
+  color: black;
+  border: 2px solid;
+  border-radius: 4px;
+}
+
+input[type=submit] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -35,6 +45,7 @@ input {
   color: white;
   border: 2px solid;
   border-radius: 4px;
+  margin: auto;
 }
 
 .jumbotron {
@@ -43,14 +54,27 @@ input {
 }
 
 .pollContent {
-  display: inline-block;
+  float: left;
   width: 400px;
 }
 
 .pieCharContainer {
-  position: absolute;
-  right: 60px;
-  display: inline-block;
+  float: right;
   width: 400px;
   height: 400px;
+}
+
+.createRemovePollButton {
+  text-align: center;
+  float: right;
+  width: 400px;
+  background-color: #F8F8F8;
+  border-radius: 4px;
+  padding-top: 10px;
+}
+
+.contentContainer {
+  background-color: #F8F8F8;
+  border-radius: 4px;
+  padding: 60px;
 }
