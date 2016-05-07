@@ -118,8 +118,8 @@ function ClickHandler() {
                 });
                 var body = '';
                 for (var i = 0; i < result.length; i++) {
-                    body += "<a href=/poll/" + result[i]._id + "><span id=" + result[i]._id +
-                        " class=pollListTitle>" + result[i].github.pollTitle + "</span></a><br>";
+                    body += "<a href=/poll/" + result[i]._id + "><button type='button' class='btn btn-default' id=" + result[i]._id +
+                        " class=pollListTitle>" + result[i].github.pollTitle + "</button></a><br>";
                 }
                 res.send(body);
             });
@@ -150,18 +150,35 @@ function ClickHandler() {
                 }
 
                 function fn2() {
+                    if (req.isAuthenticated()) {
+                        var createPollOption = "<option value=del>Create My Own Option</option>";
 
-                    var createPollOption = "<option value=del>Create My Own Option</option>";
+                    }
+                    else {
+                        var createPollOption = "";
+
+                    }
+
 
                     pollOptions = "<form action=" + "/updateVote/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + createPollOption + "</select><br><input type='submit'></form>";
                     result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollOptions;
-                    // res.send(result);
+                    if (req.isAuthenticated()) {
+                        res.render('pollcontentL', {
+                            pollOptions: JSON.stringify(options),
+                            data: JSON.stringify(data),
+                            pollContent: result,
+                        });
 
-                    res.render('pollcontent', {
-                        pollOptions: JSON.stringify(options),
-                        data: JSON.stringify(data),
-                        pollContent: result
-                    });
+                    }
+                    else {
+                        res.render('pollcontent', {
+                            pollOptions: JSON.stringify(options),
+                            data: JSON.stringify(data),
+                            pollContent: result,
+                        });
+
+                    }
+
                 }
                 fn1(fn2);
             });
@@ -227,9 +244,9 @@ function ClickHandler() {
                         function fn2() {
                             var createPollOption = "<option value=del>Create My Own Option</option>";
 
-                    pollSelect = "<form action=" + "/updateVote/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollSelect + createPollOption + "</select><br><input type='submit'></form>";
-                    result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollSelect;
-                    
+                            pollSelect = "<form action=" + "/updateVote/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollSelect + createPollOption + "</select><br><input type='submit'></form>";
+                            result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollSelect;
+
                             res.render('updateVote', {
                                 data: JSON.stringify(data),
                                 pollOptions: JSON.stringify(pollOptions),
