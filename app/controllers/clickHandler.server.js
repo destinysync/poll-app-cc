@@ -160,7 +160,8 @@ function ClickHandler() {
                     }
 
 
-                    pollOptions = "<form action=" + "/poll/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + createPollOption + "</select><br><div class=createInput></div><br><input type='submit'></form>";
+                    // pollOptions = "<form action=" + "/poll/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + createPollOption + "</select><br><div class=createInput></div><br><input type='submit'></form>";
+                   pollOptions = "<form method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + createPollOption + "</select><br><div class=createInput></div><br></form><input type='submit'>";
                     result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollOptions;
                     if (req.isAuthenticated()) {
                         res.render('pollcontentL', {
@@ -186,10 +187,11 @@ function ClickHandler() {
 
     this.updateVote = function(req, res) {
         var visitorIP = req.headers['x-forwarded-for'];
-        var pollID = req.url.match(/\/poll\/(.*)/)[1];
-console.log(visitorIP);
+        var pollID = req.url.match(/\/poll\/(.*)\?\=.*/)[1];
+        var votedOptionID = req.url.match(/\?\=(.*)/)[1];
+
         if (req.body.createOption === undefined) {
-            var ID = req.body.selectpicker;
+            var ID = votedOptionID;
             var newPollOptionArr = [];
 
             Users
@@ -200,8 +202,6 @@ console.log(visitorIP);
                     if (err) {
                         throw err;
                     }
-                    console.log(result.github.votedIPs);
-                    console.log(result.github.votedIPs.indexOf(visitorIP));
                     if (result.github.votedIPs.indexOf(visitorIP) !== -1) {
                         res.send('aaa');
                     }
@@ -266,12 +266,15 @@ console.log(visitorIP);
 
                                     pollSelect = "<form action=" + "/poll/" + result._id + " method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollSelect + createPollOption + "</select><br><div class=createInput></div><br><input type='submit'></form>";
                                     result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollSelect;
+console.log('reached.........................');
+console.log([pollOptions, data]);
+res.json([pollOptions, data]);
 
-                                    res.render('updateVote', {
-                                        data: JSON.stringify(data),
-                                        pollOptions: JSON.stringify(pollOptions),
-                                        pollContent: result
-                                    });
+                                    // res.render('updateVote', {
+                                    //     data: JSON.stringify(data),
+                                    //     pollOptions: JSON.stringify(pollOptions),
+                                    //     pollContent: result
+                                    // });
                                 }
                                 fn1(fn2);
                             });
@@ -344,7 +347,6 @@ console.log(visitorIP);
                             }
                             fn1(fn2);
                         });
-
                 });
         }
     };

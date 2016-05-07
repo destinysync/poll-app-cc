@@ -1,9 +1,11 @@
 <script>
+        
+        function char(pollOptions, charData) {
         var ctx = document.getElementById("myChart");
         var data = {
-            labels: <%- pollOptions %>,
+            labels: pollOptions,
             datasets: [{
-                data: <%= data %> ,
+                data: charData,
                 backgroundColor: [
                     "#FF6384",
                     "#36A2EB",
@@ -20,6 +22,8 @@
             type: 'pie',
             data: data,
         });
+        }
+        
 
             var createInput = document.querySelector('.createInput');
             var selectpicker = document.querySelector('#selectpicker');
@@ -32,10 +36,6 @@
             });
 
 
-
-
-
-var appUrl = window.location;
 var ajaxFunctions = {
    ready: function ready (fn) {
       if (typeof fn !== 'function') {
@@ -64,10 +64,25 @@ var ajaxFunctions = {
 
 var input = document.querySelector('input');
 var form = document.querySelector('form');
+
 input.addEventListener('click', function(){
+    var votedOptionID = $( "form" ).serialize().match(/selectpicker\=(.*)/)[1];
+    var appUrl = window.location + "?=" + votedOptionID;
     ajaxFunctions.ajaxRequest('delete', appUrl, function(data){
+        alert(JSON.parse(data)[0]);
+        alert(data[0]);
+        alert(data[1]);
         if (data == 'aaa') {
+            char([
+        "Red",
+        "Green",
+        "Yellow"
+    ], [300, 50, 100]);
             alert('voted')
+        } else {
+            pollOptions = JSON.parse(data)[0];
+            charData = JSON.parse(data)[1];
+            char(pollOptions, charData);
         }
     } )
 })
