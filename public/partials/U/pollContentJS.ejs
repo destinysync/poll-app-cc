@@ -66,19 +66,22 @@ var input = document.querySelector('input');
 var form = document.querySelector('form');
 
 input.addEventListener('click', function(){
-    var votedOptionID = $( "form" ).serialize().match(/selectpicker\=(.*)/)[1];
+     
+    function votedOptionID(){
+        var votedOption = $( "form" ).serialize();
+
+        if (votedOption.indexOf('createOption') == -1) {
+            return $( "form" ).serialize().match(/selectpicker\=(.*)/)[1];
+        } else {
+            return $( "form" ).serialize().match(/create&createOption\=(.*)/)[1];
+        }
+    }
+    var votedOptionID = votedOptionID();
     var appUrl = window.location + "?=" + votedOptionID;
+
     ajaxFunctions.ajaxRequest('delete', appUrl, function(data){
-        alert(JSON.parse(data)[0]);
-        alert(data[0]);
-        alert(data[1]);
-        if (data == 'aaa') {
-            char([
-        "Red",
-        "Green",
-        "Yellow"
-    ], [300, 50, 100]);
-            alert('voted')
+        if (data == 'voted') {
+            alert('You Can Only Vote Once Per Poll')
         } else {
             pollOptions = JSON.parse(data)[0];
             charData = JSON.parse(data)[1];

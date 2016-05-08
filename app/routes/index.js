@@ -73,7 +73,7 @@ module.exports = function(app, passport) {
 
 	app.route('/poll/*')
 		.get(clickHandler.pollContent)
-		// .post(clickHandler.updateVote);
+		.post(clickHandler.pollContentChar)
 		.delete(clickHandler.updateVote);
 
 };
