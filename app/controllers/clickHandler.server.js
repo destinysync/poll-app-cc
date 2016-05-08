@@ -93,17 +93,28 @@ function ClickHandler() {
     };
 
     this.myPoll = function(req, res) {
-        var creatorID = req.user.github.id;
-        Users
-            .find({
-                'github.id': creatorID
-            })
-            .exec(function(err, result) {
-                if (err) {
-                    throw err;
-                }
-                res.json(result);
-            });
+        if (req.user !== undefined) {
+            var creatorID = req.user.github.id;
+            Users
+                .find({
+                    'github.id': creatorID
+                })
+                .exec(function(err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                    result = result.filter(function(val) {
+                        return val.github.pollTitle !== undefined;
+                    });
+                    var body = '';
+                    for (var i = 0; i < result.length; i++) {
+                        body += "<a href=/poll/" + result[i]._id + "><button type='button' class='btn btn-default' id=" + result[i]._id +
+                            " class=pollListTitle>" + result[i].github.pollTitle + "</button></a><br>";
+                    }
+                    res.send(body);
+                });
+        }
+
     };
 
     this.allPoll = function(req, res) {
@@ -126,6 +137,7 @@ function ClickHandler() {
     };
 
     this.pollContent = function(req, res) {
+
         var pollID = req.url.match(/\/poll\/(.*)/)[1];
         Users
             .findOne({
@@ -167,6 +179,36 @@ function ClickHandler() {
                     }
                 }
                 fn1(fn2);
+            });
+    };
+
+    this.ifMyPoll = function(req, res) {
+        var pollID = req.url.match(/\/ifMyPoll\/(.*)/)[1];
+        Users
+            .findOne({
+                _id: pollID
+            })
+            .exec(function(err, result) {
+                if (err) {
+                    return console.error(err);
+                }
+                if (req.user.github.id == result.github.id) {
+                    res.json('true');
+                }
+            });
+
+    };
+
+    this.removeMyPoll = function(req, res) {
+        var pollID = req.url.match(/\/removeMyPoll\/(.*)/)[1];
+        Users
+            .remove({
+                _id: pollID
+            }, function(err) {
+                if (err) {
+                    return console.error(err);
+                }
+                res.json('removed');
             });
     };
 
@@ -229,7 +271,7 @@ function ClickHandler() {
                     if (err) {
                         throw err;
                     }
-                    console.log(result.github.votedIPs.indexOf(visitorIP), "  ", result.github.votedIPs)
+
                     if (result.github.votedIPs.indexOf(visitorIP) !== -1) {
                         res.send('voted');
                     }
@@ -298,47 +340,53 @@ function ClickHandler() {
                     if (err) {
                         throw err;
                     }
-                    var votedIPs = result.github.votedIPs;
-                    votedIPs.push(visitorIP);
-                    newPollOptionArr = result.github.pollOptionArr;
-                    newPollOptionArr.push({
-                        pollOptionID: newPollOptionArr.length + 1,
-                        pollOptionVote: 0,
-                        pollOption: votedOptionID
-                        
-                    });
-                    Users
-                        .findOneAndUpdate({
-                            '_id': pollID
-                        }, {
-                            $set: {
-                                'github.pollOptionArr': newPollOptionArr,
-                                'github.votedIPs': votedIPs
-                            }
-                        }, {
-                            new: true
-                        })
-                        .exec(function(err, result) {
-                            if (err) {
-                                throw err;
-                            }
-                            var data = [];
-                            var pollOptions = [];
-                            var arr = result.github.pollOptionArr;
 
-                            function fn1(cb) {
-                                for (var i = 0; i < arr.length; i++) {
-                                    data.push(arr[i].pollOptionVote);
-                                    pollOptions.push(arr[i].pollOption);
-                                }
-                                cb();
-                            }
+                    if (result.github.votedIPs.indexOf(visitorIP) !== -1) {
+                        res.send('voted');
+                    }
+                    else {
+                        var votedIPs = result.github.votedIPs;
+                        votedIPs.push(visitorIP);
+                        newPollOptionArr = result.github.pollOptionArr;
+                        newPollOptionArr.push({
+                            pollOptionID: newPollOptionArr.length + 1,
+                            pollOptionVote: 1,
+                            pollOption: votedOptionID
 
-                            function fn2() {
-                                res.json([pollOptions, data]);
-                            }
-                            fn1(fn2);
                         });
+                        Users
+                            .findOneAndUpdate({
+                                '_id': pollID
+                            }, {
+                                $set: {
+                                    'github.pollOptionArr': newPollOptionArr,
+                                    'github.votedIPs': votedIPs
+                                }
+                            }, {
+                                new: true
+                            })
+                            .exec(function(err, result) {
+                                if (err) {
+                                    throw err;
+                                }
+                                var data = [];
+                                var pollOptions = [];
+                                var arr = result.github.pollOptionArr;
+
+                                function fn1(cb) {
+                                    for (var i = 0; i < arr.length; i++) {
+                                        data.push(arr[i].pollOptionVote);
+                                        pollOptions.push(arr[i].pollOption);
+                                    }
+                                    cb();
+                                }
+
+                                function fn2() {
+                                    res.json([pollOptions, data]);
+                                }
+                                fn1(fn2);
+                            });
+                    }
                 });
         }
     };

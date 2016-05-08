@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <% include ../public/partials/U/head.ejs %>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Static navbar -->
+        <% include ../public/partials/L/navbar.ejs %>
+        
+        <!-- Main component for a primary marketing message or call to action -->
+        <div class="allPoll">
+      <h1>My Polls</h1>
+      <p><h4>Select a poll to see the results and vote, or <a href='/newPoll'>make a new poll!</a></h4></p>
+      <div class='allPollContainer'>
+        <h1>Loading ... Wait A Sec :)</h1>
+      </div>
+    </div>
+
+    </div>
+    <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="controllers/userController.client.js"></script>
+    <!--<script type="text/javascript" src="controllers/userController.client.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+</html>

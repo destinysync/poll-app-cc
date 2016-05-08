@@ -42,4 +42,8 @@
       allPollContainer.innerHTML = data;
    }));
 
+   ajaxFunctions.ready(ajaxFunctions.ajaxRequest('Post', allPollApiUrl, function(data) {
+      allPollContainer.innerHTML = data;
+   }));
+
 })();

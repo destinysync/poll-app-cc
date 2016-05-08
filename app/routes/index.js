@@ -66,14 +66,22 @@ module.exports = function(app, passport) {
 		.post(isLoggedIn, clickHandler.addPoll);
 
 	app.route('/myPoll')
-		.get(isLoggedIn, clickHandler.myPoll);
+		.get(isLoggedIn, function(req, res) {
+			res.render(path + '/public/myPolls.ejs');
+		});
 
 	app.route('/allpoll')
-		.get(clickHandler.allPoll);
+		.get(clickHandler.allPoll)
+		.post(clickHandler.myPoll);
 
 	app.route('/poll/*')
 		.get(clickHandler.pollContent)
 		.post(clickHandler.pollContentChar)
 		.delete(clickHandler.updateVote);
 
+	app.route('/ifMyPoll/*') 
+		.get(isLoggedIn, clickHandler.ifMyPoll);
+	
+	app.route('/removeMyPoll/*')
+	.delete(isLoggedIn, clickHandler.removeMyPoll);
 };

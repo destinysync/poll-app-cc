@@ -1,9 +1,13 @@
-<div class="jumbotron">
-            <div class='pollContent'>
-                <%- pollContent %>
-            </div>
-            <div class='pieCharContainer'>
-                <canvas id="myChart" width="400" height="400"></canvas>
-            </div>
-            
+<div class="contentContainer container-fluid">
+    <div class='row'>
+        <div class='pollContent'>
+            <%- pollContent %>
         </div>
+        <div class='pieCharContainer'>
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <div class='createRemovePollButton row' onclick="confirmRemoval()">
+    </div>
+    <div id='text'>text to be changed</div>
+</div>
