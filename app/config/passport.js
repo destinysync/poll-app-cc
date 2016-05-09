@@ -1,6 +1,6 @@
 'use strict';
 
-var GitHubStrategy = require('passport-github').Strategy;
+var GitHubStrategy = require('passport-twitter').Strategy;
 var User = require('../models/users');
 var configAuth = require('./auth');
 
@@ -16,8 +16,8 @@ module.exports = function (passport) {
 	});
 
 	passport.use(new GitHubStrategy({
-		clientID: configAuth.githubAuth.clientID,
-		clientSecret: configAuth.githubAuth.clientSecret,
+		consumerKey: "hyedU3LzPLAS8R8DCPWVjYGMM",
+		consumerSecret: "VarLohhm2eFL9lNioJFgXr1e7nmgjO0TXhRvXYMGCAEDf0bUMC",
 		callbackURL: configAuth.githubAuth.callbackURL
 	},
 	function (token, refreshToken, profile, done) {

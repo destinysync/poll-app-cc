@@ -1,8 +1,9 @@
 'use strict';
 
 var Users = require('../models/users.js');
-var fs = require('fs');
-var path = process.cwd();
+var randomColor = require('../common/randColors.js');
+var updateColorArr = require('../common/updateColorArr.js');
+
 
 function ClickHandler() {
 
@@ -82,17 +83,20 @@ function ClickHandler() {
             newPoll.github.id = creatorID;
             newPoll.github.pollTitle = pollTitle;
             newPoll.github.pollOptionArr = pollOptionArr;
+            newPoll.github.colorArr = randomColor(pollOptionArr);
             newPoll.github.votedIPs = [];
-            newPoll.save(function(err) {
+            newPoll.save(function(err, newPoll) {
                 if (err) {
                     throw err;
                 }
+                res.redirect("/poll/" + newPoll._id);
             });
         }
         fn1(fn2);
     };
 
     this.myPoll = function(req, res) {
+
         if (req.user !== undefined) {
             var creatorID = req.user.github.id;
             Users
@@ -114,6 +118,7 @@ function ClickHandler() {
                     res.send(body);
                 });
         }
+
 
     };
 
@@ -137,7 +142,6 @@ function ClickHandler() {
     };
 
     this.pollContent = function(req, res) {
-
         var pollID = req.url.match(/\/poll\/(.*)/)[1];
         Users
             .findOne({
@@ -148,6 +152,7 @@ function ClickHandler() {
                     throw err;
                 }
                 var pollOptions = '';
+                var currentPollTitle = result.github.pollTitle;
 
                 function fn1(cb) {
                     for (var i = 0; i < result.github.pollOptionArr.length; i++) {
@@ -165,11 +170,14 @@ function ClickHandler() {
                         createPollOption = "";
                     }
 
-                    pollOptions = "<form method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + createPollOption + "</select><br><div class=createInput></div><br></form><input type='submit'>";
-                    result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollOptions;
+                    pollOptions = "<form method='post'" + "><select name='selectpicker' id='selectpicker'>" + pollOptions + createPollOption + "</select><br><div class=createInput></div><br></form><input type='submit'><br><br>";
+                    var reqURI = encodeURIComponent(req.url + "&text=" + currentPollTitle);
+                    var twitterShareButton = '<input type="submit" value="Share On Twitter" id="twitterShareButton" onclick="popupTwittWindow()">';
+                    result = "<h3>" + result.github.pollTitle + "</h3>" + "<h5>I'd like to vote for ...</h5>" + pollOptions + twitterShareButton;
                     if (req.isAuthenticated()) {
                         res.render('pollcontentL', {
-                            pollContent: result
+                            pollContent: result,
+                            displayName: req.user.github.displayName
                         });
                     }
                     else {
@@ -223,9 +231,11 @@ function ClickHandler() {
                 if (err) {
                     throw err;
                 }
+                var headTtile = result.github.pollTitle;
                 var pollOptions = [];
                 var charData = [];
                 var arr = result.github.pollOptionArr;
+                var colorArr = result.github.colorArr;
 
                 function fn1(cb) {
                     for (var i = 0; i < arr.length; i++) {
@@ -236,7 +246,7 @@ function ClickHandler() {
                 }
 
                 function fn2() {
-                    res.json([pollOptions, charData]);
+                    res.json([pollOptions, charData, headTtile, colorArr]);
                 }
                 fn1(fn2);
             });
@@ -262,7 +272,6 @@ function ClickHandler() {
         if (createOptionCode === -1) {
             var ID = votedOptionID;
             var newPollOptionArr = [];
-            console.log('createOptionCode = -1');
             Users
                 .findOne({
                     '_id': pollID
@@ -279,7 +288,6 @@ function ClickHandler() {
                         var votedIPs = result.github.votedIPs;
                         votedIPs.push(visitorIP);
                         var arr = result.github.pollOptionArr;
-                        console.log('arr:  ' + arr);
                         newPollOptionArr = arr.map(function(val) {
                             for (var i = 0; i < arr.length; i++) {
                                 if (val.pollOptionID == ID) {
@@ -313,6 +321,7 @@ function ClickHandler() {
                                 var data = [];
                                 var pollOptions = [];
                                 var arr = result.github.pollOptionArr;
+                                var colorArr = result.github.colorArr;
 
                                 function fn1(cb) {
                                     for (var i = 0; i < arr.length; i++) {
@@ -323,7 +332,7 @@ function ClickHandler() {
                                 }
 
                                 function fn2() {
-                                    res.json([pollOptions, data]);
+                                    res.json([pollOptions, data, colorArr]);
                                 }
                                 fn1(fn2);
                             });
@@ -345,6 +354,7 @@ function ClickHandler() {
                         res.send('voted');
                     }
                     else {
+                        var colorArr = updateColorArr(result.github.colorArr);
                         var votedIPs = result.github.votedIPs;
                         votedIPs.push(visitorIP);
                         newPollOptionArr = result.github.pollOptionArr;
@@ -360,7 +370,8 @@ function ClickHandler() {
                             }, {
                                 $set: {
                                     'github.pollOptionArr': newPollOptionArr,
-                                    'github.votedIPs': votedIPs
+                                    'github.votedIPs': votedIPs,
+                                    'github.colorArr': colorArr
                                 }
                             }, {
                                 new: true
@@ -369,6 +380,7 @@ function ClickHandler() {
                                 if (err) {
                                     throw err;
                                 }
+                                var colorArr = result.github.colorArr;
                                 var data = [];
                                 var pollOptions = [];
                                 var arr = result.github.pollOptionArr;
@@ -382,7 +394,7 @@ function ClickHandler() {
                                 }
 
                                 function fn2() {
-                                    res.json([pollOptions, data]);
+                                    res.json([pollOptions, data, colorArr]);
                                 }
                                 fn1(fn2);
                             });

@@ -18,7 +18,9 @@ module.exports = function(app, passport) {
 
 	app.route('/')
 		.get(isLoggedIn, function(req, res) {
-			res.render(path + '/public/index.ejs');
+			res.render(path + '/public/index.ejs', {
+				displayName: req.user.github.displayName,
+			});
 		});
 
 	app.route('/login')
@@ -44,10 +46,10 @@ module.exports = function(app, passport) {
 		});
 
 	app.route('/auth/github')
-		.get(passport.authenticate('github'));
+		.get(passport.authenticate('twitter'));
 
-	app.route('/auth/github/callback')
-		.get(passport.authenticate('github', {
+	app.route('/auth/twitter/callback')
+		.get(passport.authenticate('twitter', {
 			successRedirect: '/',
 			failureRedirect: '/login'
 		}));
@@ -59,7 +61,7 @@ module.exports = function(app, passport) {
 
 	app.route('/newPoll')
 		.get(isLoggedIn, function(req, res) {
-			res.sendFile(path + '/public/newPoll.html');
+			res.render(path + '/public/newPoll.ejs', {displayName: req.user.github.displayName});
 		});
 
 	app.route('/addPoll')
@@ -67,7 +69,9 @@ module.exports = function(app, passport) {
 
 	app.route('/myPoll')
 		.get(isLoggedIn, function(req, res) {
-			res.render(path + '/public/myPolls.ejs');
+			res.render(path + '/public/myPolls.ejs', {
+				displayName: req.user.github.displayName
+			});
 		});
 
 	app.route('/allpoll')
@@ -79,9 +83,9 @@ module.exports = function(app, passport) {
 		.post(clickHandler.pollContentChar)
 		.delete(clickHandler.updateVote);
 
-	app.route('/ifMyPoll/*') 
+	app.route('/ifMyPoll/*')
 		.get(isLoggedIn, clickHandler.ifMyPoll);
-	
+
 	app.route('/removeMyPoll/*')
-	.delete(isLoggedIn, clickHandler.removeMyPoll);
+		.delete(isLoggedIn, clickHandler.removeMyPoll);
 };

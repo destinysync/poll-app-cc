@@ -37,13 +37,25 @@
    };
 
    // ajax-function
-   
-   ajaxFunctions.ready(ajaxFunctions.ajaxRequest('GET', allPollApiUrl, function(data) {
-      allPollContainer.innerHTML = data;
-   }));
 
-   ajaxFunctions.ready(ajaxFunctions.ajaxRequest('Post', allPollApiUrl, function(data) {
-      allPollContainer.innerHTML = data;
-   }));
+
+
+   var indexOrNot = window.location.href.indexOf('/myPoll');
+   if (indexOrNot > -1) {
+      ajaxFunctions.ready(ajaxFunctions.ajaxRequest('Post', allPollApiUrl, function(data) {
+         allPollContainer.innerHTML = data;
+      }));
+   }
+   else {
+      ajaxFunctions.ready(ajaxFunctions.ajaxRequest('GET', allPollApiUrl, function(data) {
+         allPollContainer.innerHTML = data;
+      }));
+   }
+
+function popupTwittWindow() {
+   var twitterIntent = "https://twitter.com/intent/tweet?url=";
+   var twittURI = twitterIntent + window.location.href + "&text=" + document.title;
+   window.open(twittURI, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=300,left=500,width=600,height=600");
+}
 
 })();
